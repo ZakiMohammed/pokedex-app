@@ -1,23 +1,30 @@
 <div class="container my-5">
     <div class="row">
-        <div class="col-sm-6 offset-sm-3">
-            <div class="card bg-electric">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-8">
-
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                                of the
-                                card's content.</p>
-                            <a href="#" class="card-link">Card link</a>
-                        </div>
-                        <div class="col-sm-4">
-                            <img src="https://pokeres.bastionbot.org/images/pokemon/2.png" class="img-fluid" alt="...">
+        <div class="col-sm-8 offset-sm-2">
+            <div class="row">
+                <div *ngFor="let pokemon of pokemons; let i = index" class="col-sm-6">
+                    <div class="card mb-3 bg-{{getType(pokemon)}}">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <h2 class="card-title">{{pokemon.name | titlecase}}</h2>
+                                    <span *ngFor="let type of pokemon.types" class="badge border rounded-pill bg-{{getType(pokemon)}}">
+                                        {{type.type.name | titlecase}}
+                                    </span>
+                                </div>
+                                <div class="col-lg-4">
+                                    <img src="https://pokeres.bastionbot.org/images/pokemon/{{pokemon.id}}.png" class="img-fluid" alt="...">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm text-center">
+            <button class="btn btn-sm btn-secondary" (click)="loadMore()">Load More</button>
         </div>
     </div>
 </div>
