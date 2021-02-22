@@ -3,17 +3,19 @@
         <div class="col-sm-8 offset-sm-2">
             <div class="row">
                 <div *ngFor="let pokemon of pokemons; let i = index" class="col-sm-6">
-                    <div class="card mb-3 bg-{{getType(pokemon)}}">
+                    <div class="card mb-3 bg-{{getType(pokemon)}}" [routerLink]="['/view', pokemon.id]">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-lg-8">
-                                    <h2 class="card-title">{{pokemon.name | titlecase}}</h2>
-                                    <span *ngFor="let type of pokemon.types" class="badge border rounded-pill bg-{{getType(pokemon)}}">
+                                    <h3 class="card-title">{{pokemon.name | titlecase}}</h3>
+                                    <span *ngFor="let type of pokemon.types"
+                                        class="badge border rounded-pill me-1 bg-{{getType(pokemon)}}">
                                         {{type.type.name | titlecase}}
                                     </span>
                                 </div>
                                 <div class="col-lg-4">
-                                    <img src="https://pokeres.bastionbot.org/images/pokemon/{{pokemon.id}}.png" class="img-fluid" alt="...">
+                                    <img src="https://pokeres.bastionbot.org/images/pokemon/{{pokemon.id}}.png"
+                                        class="img-fluid" alt="...">
                                 </div>
                             </div>
                         </div>
@@ -24,7 +26,10 @@
     </div>
     <div class="row">
         <div class="col-sm text-center">
-            <button class="btn btn-sm btn-secondary" (click)="loadMore()">Load More</button>
+            <button class="btn btn-sm btn-secondary" (click)="loadMore()">
+                <div class="spinner-border spinner-border-sm" role="status" *ngIf="message === 'Loading...'"></div>
+                {{message}}
+            </button>
         </div>
     </div>
 </div>

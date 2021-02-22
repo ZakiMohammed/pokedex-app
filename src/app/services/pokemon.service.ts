@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { concat, Observable } from 'rxjs';
-import { concatMap, map, mergeMap } from "rxjs/operators";
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -9,9 +8,23 @@ import { environment } from 'src/environments/environment';
 })
 export class PokemonService {
 
-  url: string = environment.apiUrl + 'pokemon/';
+  private url: string = environment.apiUrl + 'pokemon/';
+  private _pokemons: any[] = [];
+  private _next: string = '';
 
   constructor(private http: HttpClient) {
+  }
+
+  get pokemons(): any[] {
+    return this._pokemons;
+  }
+  
+  get next(): string {
+    return this._next;
+  }
+
+  set next(next: string) {
+    this._next = next;
   }
 
   get(name: string): Observable<any> {
@@ -19,8 +32,8 @@ export class PokemonService {
     return this.http.get<any>(url);
   }
 
-  getNext(url: string): Observable<any> {
-    url = url === '' ? `${this.url}?limit=10` : url;
+  getNext(): Observable<any> {
+    const url = this.next === '' ? `${this.url}?limit=10` : this.next;
     return this.http.get<any>(url);
   }
 }

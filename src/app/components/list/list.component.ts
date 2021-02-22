@@ -9,13 +9,18 @@ import { PokemonService } from 'src/app/services/pokemon.service';
 })
 export class ListComponent implements OnInit {
 
-  pokemons: any[] = [];
-  next: string = '';
+  message: string = 'Load More';
 
   constructor(private pokemonService: PokemonService) { }
 
+  get pokemons(): any[] {
+    return this.pokemonService.pokemons;
+  }
+
   ngOnInit(): void {
-    this.loadMore();
+    if (!this.pokemons.length) {
+      this.loadMore();
+    }
   }
 
   getType(pokemon: any): string {
@@ -23,15 +28,14 @@ export class ListComponent implements OnInit {
   }
 
   loadMore(): void {
-    this.pokemonService.getNext(this.next).subscribe(response => {
-      this.next = response.next;
-      if (response && response.results) {
-        const details = response.results.map((i: any) => this.pokemonService.get(i.name));
-        concat(...details).subscribe((response: any) => {
-          this.pokemons.push(response);
-        });
-      }
-    })
+    this.message = 'Loading...';
+    this.pokemonService.getNext().subscribe(response => {
+      this.pokemonService.next = response.next;
+      const details = response.results.map((i: any) => this.pokemonService.get(i.name));
+      concat(...details).subscribe((response: any) => {
+        this.pokemonService.pokemons.push(response);
+      });
+    }, error => console.log('Error Occurred:', error), () => this.message = 'Load More');
   }
 
 }
