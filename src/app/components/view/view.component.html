@@ -1,1 +1,93 @@
-<p>view works!</p>
+<ng-container *ngIf="pokemon">
+    <div class="bg-{{getType(pokemon)}} py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-8 offset-sm-2">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h1>{{pokemon.name | titlecase}}</h1>
+                            <span *ngFor="let type of pokemon.types"
+                                class="badge border rounded-pill me-1 bg-{{getType(pokemon)}}">
+                                {{type.type.name | titlecase}}
+                            </span>
+
+                            <ul class="list-group list-group-flush mt-4" style="width: 20rem;">
+                                <li class="list-group-item bg-transparent">Experience <b
+                                        class="float-end">{{pokemon.base_experience}}</b></li>
+                                <li class="list-group-item bg-transparent">Height <b
+                                        class="float-end">{{pokemon.height}}</b></li>
+                                <li class="list-group-item bg-transparent">Weight <b
+                                        class="float-end">{{pokemon.weight}}</b></li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-6">
+                            <img src="https://pokeres.bastionbot.org/images/pokemon/{{pokemon.id}}.png" alt=""
+                                class="img-fluid" style="width: 300px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container my-3">
+        <div class="row">
+            <div class="col-sm-8 offset-sm-2">
+
+                <!-- stats -->
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h4 class="card-title">Stats</h4>
+                        <div *ngFor="let stat of pokemon.stats" class="row mt-3">
+                            <div class="col-sm-2">
+                                <h6 class="text-end mt-1">{{stat.stat.name | titlecase}}</h6>
+                            </div>
+                            <div class="col-sm-10">
+                                <div class="progress" style="height: 30px">
+                                    <div class="progress-bar progress-bar-striped bg-{{getType(pokemon)}}"
+                                        role="progressbar" style="height: 30px;" [style.width]="stat.base_stat + '%'"
+                                        aria-valuemin="0" aria-valuemax="100">
+                                        <b>{{stat.base_stat}}</b>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- abilities -->
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h4 class="card-title">Abilities</h4>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li *ngFor="let ability of pokemon.abilities" class="list-group-item">
+                            {{ability.ability.name | titlecase}}
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- moves -->
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h4 class="card-title">Moves</h4>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li *ngFor="let move of pokemon.moves" class="list-group-item">
+                            {{move.move.name | titlecase}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="position-absolute top-0 start-0">
+        <a class="btn btn-lg text-white" [routerLink]="['list']">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-arrow-left"
+                viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                    d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+            </svg>
+        </a>
+    </div>
+</ng-container>

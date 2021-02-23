@@ -27,6 +27,10 @@ export class PokemonService {
     this._next = next;
   }
 
+  getType(pokemon: any): string {
+    return pokemon && pokemon.types.length > 0 ? pokemon.types[0].type.name : '';
+  }
+
   get(name: string): Observable<any> {
     const url = `${this.url}${name}`;
     return this.http.get<any>(url);

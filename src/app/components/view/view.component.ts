@@ -9,18 +9,27 @@ import { PokemonService } from 'src/app/services/pokemon.service';
 })
 export class ViewComponent implements OnInit {
 
+  pokemon: any = null;
+
   constructor(
     private route: ActivatedRoute,
     private pokemonService: PokemonService) { }
 
   ngOnInit(): void {
-    console.log(this.route.snapshot.params);
-    console.log(this.pokemonService.pokemons);
-    const id = +this.route.snapshot.params.id;
-    if (id) {
-      const pokemon = this.pokemonService.pokemons.find(i => i.id === id);
-      console.log(pokemon);
+    const name = this.route.snapshot.params.name;
+    if (this.pokemonService.pokemons.length) {
+      this.pokemon = this.pokemonService.pokemons.find(i => i.name === name);
+      console.log(this.pokemon);
+    } else {
+      this.pokemonService.get(name).subscribe(response => {
+        this.pokemon = response;
+        console.log(this.pokemon);
+      }, error => console.log('Error Occurred:', error));
     }
+  }
+
+  getType(pokemon: any): string {
+    return this.pokemonService.getType(pokemon);
   }
 
 }

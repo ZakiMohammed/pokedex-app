@@ -24,7 +24,7 @@ export class ListComponent implements OnInit {
   }
 
   getType(pokemon: any): string {
-    return pokemon && pokemon.types.length > 0 ? pokemon.types[0].type.name : '';
+    return this.pokemonService.getType(pokemon);
   }
 
   loadMore(): void {
