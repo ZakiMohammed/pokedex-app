@@ -36,8 +36,18 @@ export class PokemonService {
     return this.http.get<any>(url);
   }
 
+  getEvolution(id: number): Observable<any> {
+    const url = `${environment.apiUrl}evolution-chain/${id}`;
+    return this.http.get<any>(url);
+  }
+
+  getSpecies(name: string): Observable<any> {
+    const url = `${environment.apiUrl}pokemon-species/${name}`;
+    return this.http.get<any>(url);
+  }
+
   getNext(): Observable<any> {
-    const url = this.next === '' ? `${this.url}?limit=10` : this.next;
+    const url = this.next === '' ? `${this.url}?limit=100` : this.next;
     return this.http.get<any>(url);
   }
 }
