@@ -32,13 +32,9 @@
 								"input": "./node_modules/bootstrap-icons/icons/",
 								"output": "/assets/icons/"
 							},
-              {
-                "glob": "_redirects",
-                "input": "src",
-                "output": "/"
-              },
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/_redirects"
             ],
             "styles": [
 							"./node_modules/bootstrap/dist/css/bootstrap.min.css",
