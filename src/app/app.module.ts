@@ -11,7 +11,7 @@ import { ViewComponent } from './components/view/view.component';
   declarations: [
     AppComponent,
     ListComponent,
-    ViewComponent
+    ViewComponent,
   ],
   imports: [
     BrowserModule,

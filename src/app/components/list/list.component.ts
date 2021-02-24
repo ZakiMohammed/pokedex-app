@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { concat } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { concat, Subscription } from 'rxjs';
 import { PokemonService } from 'src/app/services/pokemon.service';
 
 @Component({
@@ -7,14 +7,20 @@ import { PokemonService } from 'src/app/services/pokemon.service';
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnInit, OnDestroy {
 
-  message: string = 'Load More';
+  loading: boolean = false;
+
+  subscriptions: Subscription[] = [];
 
   constructor(private pokemonService: PokemonService) { }
 
   get pokemons(): any[] {
     return this.pokemonService.pokemons;
+  }
+
+  set subscription(subscription: Subscription) {
+    this.subscriptions.push(subscription);
   }
 
   ngOnInit(): void {
@@ -23,19 +29,23 @@ export class ListComponent implements OnInit {
     }
   }
 
-  getType(pokemon: any): string {
-    return this.pokemonService.getType(pokemon);
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription ? subscription.unsubscribe() : 0);
   }
 
   loadMore(): void {
-    this.message = 'Loading...';
-    this.pokemonService.getNext().subscribe(response => {
+    this.loading = true;
+    this.subscription = this.pokemonService.getNext().subscribe(response => {
       this.pokemonService.next = response.next;
       const details = response.results.map((i: any) => this.pokemonService.get(i.name));
-      concat(...details).subscribe((response: any) => {
+      this.subscription = concat(...details).subscribe((response: any) => {
         this.pokemonService.pokemons.push(response);
       });
-    }, error => console.log('Error Occurred:', error), () => this.message = 'Load More');
+    }, error => console.log('Error Occurred:', error), () => this.loading = false);
+  }
+
+  getType(pokemon: any): string {
+    return this.pokemonService.getType(pokemon);
   }
 
 }

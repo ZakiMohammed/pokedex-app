@@ -28,8 +28,8 @@
     <div class="row">
         <div class="col-sm text-center">
             <button class="btn btn-sm btn-secondary" (click)="loadMore()">
-                <div class="spinner-border spinner-border-sm" role="status" *ngIf="message === 'Loading...'"></div>
-                {{message}}
+                <div class="spinner-border spinner-border-sm" role="status" *ngIf="loading"></div>
+                {{loading ? 'Loading...' : 'Load More'}}
             </button>
         </div>
     </div>

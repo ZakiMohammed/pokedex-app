@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { PokemonService } from 'src/app/services/pokemon.service';
 
 @Component({
@@ -11,52 +12,61 @@ export class ViewComponent implements OnInit {
 
   pokemon: any = null;
 
+  subscriptions: Subscription[] = [];
+
   constructor(
     private route: ActivatedRoute,
     private pokemonService: PokemonService) { }
 
+  set subscription(subscription: Subscription) {
+    this.subscriptions.push(subscription);
+  }
+
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      const name = params.name;
+    this.subscription = this.route.params.subscribe(params => {
+
       if (this.pokemonService.pokemons.length) {
-        this.pokemon = this.pokemonService.pokemons.find(i => i.name === name);
-        this.getEvolution();
-      } else {
-        this.pokemonService.get(name).subscribe(response => {
-          this.pokemon = response;
+        this.pokemon = this.pokemonService.pokemons.find(i => i.name === params.name);
+        if (this.pokemon) {
           this.getEvolution();
-        }, error => console.log('Error Occurred:', error));
+          return;
+        }
       }
+
+      this.subscription = this.pokemonService.get(params.name).subscribe(response => {
+        this.pokemon = response;
+        this.getEvolution();
+      }, error => console.log('Error Occurred:', error));
     });
   }
 
-  getType(pokemon: any): string {
-    return this.pokemonService.getType(pokemon);
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription ? subscription.unsubscribe() : 0);
   }
 
   getEvolution() {
     if (!this.pokemon.evolutions || !this.pokemon.evolutions.length) {
       this.pokemon.evolutions = [];
-      this.pokemonService.getSpecies(this.pokemon.name).subscribe(response => {
+      this.subscription = this.pokemonService.getSpecies(this.pokemon.name).subscribe(response => {
         const id = this.getId(response.evolution_chain.url);
-        this.pokemonService.getEvolution(id).subscribe(response => {
-          this.getEvolves(response.chain);
-        })
+        this.subscription = this.pokemonService.getEvolution(id).subscribe(response => this.getEvolves(response.chain));
       });
     }
   }
 
   getEvolves(chain: any) {
-    const species = {
+    this.pokemon.evolutions.push({
       id: this.getId(chain.species.url),
       name: chain.species.name
-    };
-
-    this.pokemon.evolutions.push(species);
+    });
 
     if (chain.evolves_to.length) {
       this.getEvolves(chain.evolves_to[0]);
     }
+  }
+
+  getType(pokemon: any): string {
+    return this.pokemonService.getType(pokemon);
   }
 
   getId(url: string): number {

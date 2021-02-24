@@ -4,7 +4,7 @@ import { ListComponent } from './components/list/list.component';
 import { ViewComponent } from './components/view/view.component';
 
 const routes: Routes = [
-  { path: 'list', component: ListComponent },
+  { path: '', component: ListComponent },
   { path: 'view/:name', component: ViewComponent },
   { path: '**', component: ListComponent }
 ];
